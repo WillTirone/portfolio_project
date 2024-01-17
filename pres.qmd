@@ -1,0 +1,111 @@
+---
+format: 
+  revealjs: 
+    theme: slides.scss
+    transition: fade
+    slide-number: true
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+## modelfactory
+
+Will Tirone
+
+![](logo.png){fig-align="center"}
+
+
+## Inspiration
+
+I'm tired of writing code to do this!
+
+```{r inspo}
+#| echo: true
+lm_1 = lm(mpg ~ cyl, data = mtcars)
+lm_2 = lm(mpg ~ hp, data = mtcars)
+lm_3 = lm(mpg ~ disp, data = mtcars)
+
+bind_rows(data.frame(summary(lm_1)$coefficients[, c('Estimate', 'Std. Error')]),
+          data.frame(summary(lm_2)$coefficients[, c('Estimate', 'Std. Error')]),
+          data.frame(summary(lm_3)$coefficients[, c('Estimate', 'Std. Error')])
+)
+```
+
+## Goal 
+
+* Make a package to fix this! 
+* Keep the syntax very simple, something like `cowplot`, because I can
+never remember if I need `coef()`, `confint()` on summary, etc...
+
+```{r}
+#| echo: true 
+#| eval: false 
+
+plot_grid(plot1, plot2, plot3)
+```
+
+## Package Structure 
+
+* Much of the structure is not made by hand, but with `usethis` and `devtools` commands.
+* `devtools::create_package()` creates R/, DESCRIPTION, and other files I didn't know I needed!
+
+```
+├── R
+│   ├── combine.R
+|   ├── helpers.R
+├── tests
+│   ├── testing_files.R
+.
+.
+.
+├── DESCRIPTION
+└── README.md
+```
+
+## Typical Workflow
+
+1. Edit some code 
+2. `devtools::load_all()` and try out the code interactively 
+3. update documentation
+4. update or add a new test, run testing file 
+5. `devtools::check()` to see if everything runs and installs smoothly
+6. commit and push changes to my GitHub repo
+
+Sometimes in different order, but always run `check()` at many different stages to avoid bigger problems later.
+
+## lm coeff demo  
+
+```{r lm_demo}
+#| echo: true
+#| eval: false 
+lm_1 = lm(mpg ~ cyl, data = mtcars)
+lm_2 = lm(mpg ~ hp, data = mtcars)
+lm_3 = lm(mpg ~ disp, data = mtcars)
+
+modelfactory::stack_coeff(lm_1, lm_2, lm_3)
+```
+
+## glm metrics demo  
+
+```{r glm_demo}
+#| echo: true
+#| eval: false 
+glm_1 = glm(vs ~ drat + hp, data = mtcars)
+glm_2 = glm(vs ~ wt + qsec, data = mtcars)
+glm_3 = glm(vs ~ ., data = mtcars)
+
+modelfactory::stack_metrics(glm_1, glm_2, glm_3)
+```
+
+
+## Challenges 
+
+* dependencies 
+  - stats::confint() calls MASS::confint(), do I need to make both a dependancy?? 
+  - lme4 and Matrix installation issues!
+* I spent 90% of my time understanding how packages worked and 10% of time writing actual code
+* completely different mindset compared to solving a problem once for homework
+
+
