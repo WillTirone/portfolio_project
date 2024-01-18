@@ -14,7 +14,7 @@ library(tidyverse)
 
 Will Tirone
 
-![](logo.png){fig-align="center"}
+![](images\logo.png){fig-align="center"}
 
 
 ## Inspiration
@@ -25,13 +25,23 @@ I'm tired of writing code to do this!
 #| echo: true
 lm_1 = lm(mpg ~ cyl, data = mtcars)
 lm_2 = lm(mpg ~ hp, data = mtcars)
-lm_3 = lm(mpg ~ disp, data = mtcars)
 
-bind_rows(data.frame(summary(lm_1)$coefficients[, c('Estimate', 'Std. Error')]),
-          data.frame(summary(lm_2)$coefficients[, c('Estimate', 'Std. Error')]),
-          data.frame(summary(lm_3)$coefficients[, c('Estimate', 'Std. Error')])
+bind_rows(data.frame(model = "lm_1", 
+                     MSE = mean(lm_1$residuals^2),
+                     RMSE = sqrt(mean(lm_1$residuals^2))),
+          data.frame(model = "lm_2", 
+                     MSE = mean(lm_2$residuals^2),
+                     RMSE = sqrt(mean(lm_2$residuals^2)))
 )
 ```
+
+## Scope 
+
+* Has anyone else done this? 
+* I don't know, so I did it anyway
+* This is the actual R website in 2024
+![](images\cran.png){fig-align="center"}
+
 
 ## Goal 
 
@@ -66,10 +76,10 @@ plot_grid(plot1, plot2, plot3)
 
 ## Typical Workflow
 
-1. Edit some code 
+1. Edit some code in R/
 2. `devtools::load_all()` and try out the code interactively 
-3. update documentation
-4. update or add a new test, run testing file 
+3. update documentation with `document()`
+4. update or add a new test, and run `test_active_file()`
 5. `devtools::check()` to see if everything runs and installs smoothly
 6. commit and push changes to my GitHub repo
 
@@ -79,24 +89,23 @@ Sometimes in different order, but always run `check()` at many different stages 
 
 ```{r lm_demo}
 #| echo: true
-#| eval: false 
+#| eval: false
 lm_1 = lm(mpg ~ cyl, data = mtcars)
 lm_2 = lm(mpg ~ hp, data = mtcars)
 lm_3 = lm(mpg ~ disp, data = mtcars)
 
-modelfactory::stack_coeff(lm_1, lm_2, lm_3)
+#modelfactory::stack_coeff(lm_1, lm_2, lm_3)
 ```
 
 ## glm metrics demo  
 
 ```{r glm_demo}
 #| echo: true
-#| eval: false 
 glm_1 = glm(vs ~ drat + hp, data = mtcars)
 glm_2 = glm(vs ~ wt + qsec, data = mtcars)
 glm_3 = glm(vs ~ ., data = mtcars)
 
-modelfactory::stack_metrics(glm_1, glm_2, glm_3)
+#modelfactory::stack_metrics(glm_1, glm_2, glm_3)
 ```
 
 
@@ -107,5 +116,19 @@ modelfactory::stack_metrics(glm_1, glm_2, glm_3)
   - lme4 and Matrix installation issues!
 * I spent 90% of my time understanding how packages worked and 10% of time writing actual code
 * completely different mindset compared to solving a problem once for homework
+ 
+## Example
+
+* deviance / AIC are attributes of glm, but not lmer models! 
+* Similar issue with `summary()` objects and many others.
+  
+```{r}
+cat("lm summary \n")
+names(lm_1)
+cat("glm summary \n")
+names(glm_1)
+```
+
+
 
 

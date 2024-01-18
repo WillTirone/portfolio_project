@@ -8,7 +8,7 @@
 <link href="pres_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="pres_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="pres_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.353">
+  <meta name="generator" content="quarto-1.3.450">
 
   <title>pres</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -393,29 +393,34 @@
 <h2>modelfactory</h2>
 <p>Will Tirone</p>
 
-<img data-src="logo.png" class="r-stretch quarto-figure-center"></section>
+<img data-src="images\logo.png" class="r-stretch quarto-figure-center"></section>
 <section id="inspiration" class="slide level2">
 <h2>Inspiration</h2>
 <p>I’m tired of writing code to do this!</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl, <span class="at">data =</span> mtcars)</span>
 <span id="cb1-2"><a href="#cb1-2"></a>lm_2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>lm_3 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> mtcars)</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">bind_rows</span>(<span class="fu">data.frame</span>(<span class="fu">summary</span>(lm_1)<span class="sc">$</span>coefficients[, <span class="fu">c</span>(<span class="st">'Estimate'</span>, <span class="st">'Std. Error'</span>)]),</span>
-<span id="cb1-6"><a href="#cb1-6"></a>          <span class="fu">data.frame</span>(<span class="fu">summary</span>(lm_2)<span class="sc">$</span>coefficients[, <span class="fu">c</span>(<span class="st">'Estimate'</span>, <span class="st">'Std. Error'</span>)]),</span>
-<span id="cb1-7"><a href="#cb1-7"></a>          <span class="fu">data.frame</span>(<span class="fu">summary</span>(lm_3)<span class="sc">$</span>coefficients[, <span class="fu">c</span>(<span class="st">'Estimate'</span>, <span class="st">'Std. Error'</span>)])</span>
-<span id="cb1-8"><a href="#cb1-8"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">bind_rows</span>(<span class="fu">data.frame</span>(<span class="at">model =</span> <span class="st">"lm_1"</span>, </span>
+<span id="cb1-5"><a href="#cb1-5"></a>                     <span class="at">MSE =</span> <span class="fu">mean</span>(lm_1<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb1-6"><a href="#cb1-6"></a>                     <span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm_1<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>))),</span>
+<span id="cb1-7"><a href="#cb1-7"></a>          <span class="fu">data.frame</span>(<span class="at">model =</span> <span class="st">"lm_2"</span>, </span>
+<span id="cb1-8"><a href="#cb1-8"></a>                     <span class="at">MSE =</span> <span class="fu">mean</span>(lm_2<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb1-9"><a href="#cb1-9"></a>                     <span class="at">RMSE =</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>(lm_2<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb1-10"><a href="#cb1-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                   Estimate  Std..Error
-(Intercept)...1 37.88457649 2.073843606
-cyl             -2.87579014 0.322408883
-(Intercept)...3 30.09886054 1.633920950
-hp              -0.06822828 0.010119304
-(Intercept)...5 29.59985476 1.229719515
-disp            -0.04121512 0.004711833</code></pre>
+<pre><code>  model       MSE     RMSE
+1  lm_1  9.635445 3.104101
+2  lm_2 13.989822 3.740297</code></pre>
 </div>
 </div>
+</section>
+<section id="scope" class="slide level2">
+<h2>Scope</h2>
+<ul>
+<li>Has anyone else done this?</li>
+<li>I don’t know, so I did it anyway <img data-src="images\cran.png" data-fig-align="center"></li>
+</ul>
 </section>
 <section id="goal" class="slide level2">
 <h2>Goal</h2>
@@ -447,10 +452,10 @@ disp            -0.04121512 0.004711833</code></pre>
 <section id="typical-workflow" class="slide level2">
 <h2>Typical Workflow</h2>
 <ol type="1">
-<li>Edit some code</li>
+<li>Edit some code in R/</li>
 <li><code>devtools::load_all()</code> and try out the code interactively</li>
-<li>update documentation</li>
-<li>update or add a new test, run testing file</li>
+<li>update documentation with <code>document()</code></li>
+<li>update or add a new test, and run <code>test_active_file()</code></li>
 <li><code>devtools::check()</code> to see if everything runs and installs smoothly</li>
 <li>commit and push changes to my GitHub repo</li>
 </ol>
@@ -463,7 +468,7 @@ disp            -0.04121512 0.004711833</code></pre>
 <span id="cb5-2"><a href="#cb5-2"></a>lm_2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
 <span id="cb5-3"><a href="#cb5-3"></a>lm_3 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> mtcars)</span>
 <span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a>modelfactory<span class="sc">::</span><span class="fu">stack_coeff</span>(lm_1, lm_2, lm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#modelfactory::stack_coeff(lm_1, lm_2, lm_3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="glm-metrics-demo" class="slide level2">
@@ -473,7 +478,7 @@ disp            -0.04121512 0.004711833</code></pre>
 <span id="cb6-2"><a href="#cb6-2"></a>glm_2 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> wt <span class="sc">+</span> qsec, <span class="at">data =</span> mtcars)</span>
 <span id="cb6-3"><a href="#cb6-3"></a>glm_3 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span>
 <span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a>modelfactory<span class="sc">::</span><span class="fu">stack_metrics</span>(glm_1, glm_2, glm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#modelfactory::stack_metrics(glm_1, glm_2, glm_3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="challenges" class="slide level2">
@@ -487,6 +492,38 @@ disp            -0.04121512 0.004711833</code></pre>
 <li>I spent 90% of my time understanding how packages worked and 10% of time writing actual code</li>
 <li>completely different mindset compared to solving a problem once for homework</li>
 </ul>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+<ul>
+<li>deviance / AIC are attributes of glm, but not lmer models!</li>
+<li>Similar issue with <code>summary()</code> objects and many others.</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>lm summary </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "coefficients"  "residuals"     "effects"       "rank"         
+ [5] "fitted.values" "assign"        "qr"            "df.residual"  
+ [9] "xlevels"       "call"          "terms"         "model"        </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>glm summary </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "coefficients"      "residuals"         "fitted.values"    
+ [4] "effects"           "R"                 "rank"             
+ [7] "qr"                "family"            "linear.predictors"
+[10] "deviance"          "aic"               "null.deviance"    
+[13] "iter"              "weights"           "prior.weights"    
+[16] "df.residual"       "df.null"           "y"                
+[19] "converged"         "boundary"          "model"            
+[22] "call"              "formula"           "terms"            
+[25] "data"              "offset"            "control"          
+[28] "method"            "contrasts"         "xlevels"          </code></pre>
+</div>
+</div>
 <div class="footer footer-default">
 
 </div>
