@@ -39,6 +39,7 @@ bind_rows(data.frame(model = "lm_1",
 
 * Has anyone else done this? 
 * I don't know, so I did it anyway
+* *"But there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering."* - R Packages 2e
 * This is the actual R website in 2024
 ![](images\cran.png){fig-align="center"}
 
