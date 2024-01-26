@@ -16,7 +16,6 @@ Will Tirone
 
 ![](images\logo.png){fig-align="center"}
 
-
 ## Inspiration
 
 I'm tired of writing code to do this!
@@ -38,11 +37,10 @@ bind_rows(data.frame(model = "lm_1",
 ## Scope 
 
 * Has anyone else done this? 
-* I don't know, so I did it anyway
+* Maybe? https://github.com/tidymodels/broom/issues/2
 * *"But there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering."* - R Packages 2e
 * This is the actual R website in 2024
-![](images\cran.png){fig-align="center"}
-
+![](images\cran.PNG){fig-align="center"}
 
 ## Goal 
 
@@ -53,8 +51,9 @@ never remember if I need `coef()`, `confint()` on summary, etc...
 ```{r}
 #| echo: true 
 #| eval: false 
+library(cowplot)
 
-plot_grid(plot1, plot2, plot3)
+cowplot::plot_grid(plot1, plot2, plot3)
 ```
 
 ## Package Structure 
@@ -79,46 +78,60 @@ plot_grid(plot1, plot2, plot3)
 
 1. Edit some code in R/
 2. `devtools::load_all()` and try out the code interactively 
-3. update documentation with `document()`
-4. update or add a new test, and run `test_active_file()`
+3. Update documentation with `document()`
+4. Update or add a new test, and run `test_active_file()`
 5. `devtools::check()` to see if everything runs and installs smoothly
-6. commit and push changes to my GitHub repo
+6. Commit and push changes to my GitHub repo
 
 Sometimes in different order, but always run `check()` at many different stages to avoid bigger problems later.
 
-## lm coeff demo  
+## How Do We "Test" the Code We Wrote? 
 
-```{r lm_demo}
+![](images\install-load.png){fig-align="center"}
+
+
+## modelfactory::stack_metrics() lm Example
+
+```{r lm_metrics}
 #| echo: true
-#| eval: false
+library(modelfactory)
+
 lm_1 = lm(mpg ~ cyl, data = mtcars)
 lm_2 = lm(mpg ~ hp, data = mtcars)
 lm_3 = lm(mpg ~ disp, data = mtcars)
 
-#modelfactory::stack_coeff(lm_1, lm_2, lm_3)
+modelfactory::stack_metrics(lm_1, lm_2, lm_3)
 ```
 
-## glm metrics demo  
+## modelfactory::stack_metrics() glm Example
 
-```{r glm_demo}
+```{r glm_metrics}
 #| echo: true
 glm_1 = glm(vs ~ drat + hp, data = mtcars)
 glm_2 = glm(vs ~ wt + qsec, data = mtcars)
 glm_3 = glm(vs ~ ., data = mtcars)
 
-#modelfactory::stack_metrics(glm_1, glm_2, glm_3)
+modelfactory::stack_metrics(glm_1, glm_2, glm_3)
 ```
 
+## modelfactory::stack_coeff() lm Example
+
+```{r lm_demo}
+#| echo: true
+
+modelfactory::stack_coeff(lm_1, lm_2, lm_3)
+```
 
 ## Challenges 
 
-* dependencies 
-  - stats::confint() calls MASS::confint(), do I need to make both a dependancy?? 
-  - lme4 and Matrix installation issues!
+* Dependencies: 
+  - stats::confint() calls MASS::confint(), do I need to make both a dependency? 
+  - lme4 and Matrix installation issues, but just used for examples in code
 * I spent 90% of my time understanding how packages worked and 10% of time writing actual code
-* completely different mindset compared to solving a problem once for homework
+* Completely different mindset compared to solving a problem once for homework
+* Writing tests is not something we do often.
  
-## Example
+## Challenges (cont.)
 
 * deviance / AIC are attributes of glm, but not lmer models! 
 * Similar issue with `summary()` objects and many others.
@@ -127,9 +140,19 @@ glm_3 = glm(vs ~ ., data = mtcars)
 cat("lm summary \n")
 names(lm_1)
 cat("glm summary \n")
-names(glm_1)
+names(glm_1)[1:20]
 ```
 
+## CRAN Submission
 
+From R Packages (2e): 
 
+* usethis::use_news_md()
+* usethis::use_cran_comments()
+* Update (aspirational) install instructions in README
+* Proofread Title: and Description:
+* Check that all exported functions have @returns and @examples
+* Check that Authors@R: includes a copyright holder (role ‘cph’)
+* Check licensing of included files
+* Review https://github.com/DavisVaughan/extrachecks
 

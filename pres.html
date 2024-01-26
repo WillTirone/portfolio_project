@@ -419,9 +419,9 @@
 <h2>Scope</h2>
 <ul>
 <li>Has anyone else done this?</li>
-<li>I don’t know, so I did it anyway</li>
-<li><em>“But there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering.”</em></li>
-<li>This is the actual R website in 2024 <img data-src="images\cran.png" data-fig-align="center"></li>
+<li>Maybe? https://github.com/tidymodels/broom/issues/2</li>
+<li><em>“But there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering.”</em> - R Packages 2e</li>
+<li>This is the actual R website in 2024 <img data-src="images\cran.PNG" data-fig-align="center"></li>
 </ul>
 </section>
 <section id="goal" class="slide level2">
@@ -431,7 +431,9 @@
 <li>Keep the syntax very simple, something like <code>cowplot</code>, because I can never remember if I need <code>coef()</code>, <code>confint()</code> on summary, etc…</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">plot_grid</span>(plot1, plot2, plot3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(plot1, plot2, plot3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="package-structure" class="slide level2">
@@ -456,47 +458,87 @@
 <ol type="1">
 <li>Edit some code in R/</li>
 <li><code>devtools::load_all()</code> and try out the code interactively</li>
-<li>update documentation with <code>document()</code></li>
-<li>update or add a new test, and run <code>test_active_file()</code></li>
+<li>Update documentation with <code>document()</code></li>
+<li>Update or add a new test, and run <code>test_active_file()</code></li>
 <li><code>devtools::check()</code> to see if everything runs and installs smoothly</li>
-<li>commit and push changes to my GitHub repo</li>
+<li>Commit and push changes to my GitHub repo</li>
 </ol>
 <p>Sometimes in different order, but always run <code>check()</code> at many different stages to avoid bigger problems later.</p>
 </section>
-<section id="lm-coeff-demo" class="slide level2">
-<h2>lm coeff demo</h2>
+<section id="how-do-we-test-the-code-we-wrote" class="slide level2">
+<h2>How Do We “Test” the Code We Wrote?</h2>
+
+<img data-src="images\install-load.png" class="r-stretch quarto-figure-center"></section>
+<section id="modelfactorystack_metrics-lm-example" class="slide level2">
+<h2>modelfactory::stack_metrics() lm Example</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl, <span class="at">data =</span> mtcars)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>lm_2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>lm_3 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> mtcars)</span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#modelfactory::stack_coeff(lm_1, lm_2, lm_3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(modelfactory)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>lm_1 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl, <span class="at">data =</span> mtcars)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>lm_2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>lm_3 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> mtcars)</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a>modelfactory<span class="sc">::</span><span class="fu">stack_metrics</span>(lm_1, lm_2, lm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  model                                r.squared adj.r.squared   MSE  RMSE   MAE
+  &lt;chr&gt;                                    &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 lm(formula = mpg ~ cyl, data = mtca…     0.726         0.717  9.64  3.10  2.40
+2 lm(formula = mpg ~ hp, data = mtcar…     0.602         0.589 14.0   3.74  2.91
+3 lm(formula = mpg ~ disp, data = mtc…     0.718         0.709  9.91  3.15  2.61</code></pre>
+</div>
 </div>
 </section>
-<section id="glm-metrics-demo" class="slide level2">
-<h2>glm metrics demo</h2>
+<section id="modelfactorystack_metrics-glm-example" class="slide level2">
+<h2>modelfactory::stack_metrics() glm Example</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>glm_1 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> drat <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>glm_2 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> wt <span class="sc">+</span> qsec, <span class="at">data =</span> mtcars)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>glm_3 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span>
-<span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#modelfactory::stack_metrics(glm_1, glm_2, glm_3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>glm_1 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> drat <span class="sc">+</span> hp, <span class="at">data =</span> mtcars)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>glm_2 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> wt <span class="sc">+</span> qsec, <span class="at">data =</span> mtcars)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>glm_3 <span class="ot">=</span> <span class="fu">glm</span>(vs <span class="sc">~</span> ., <span class="at">data =</span> mtcars)</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a>modelfactory<span class="sc">::</span><span class="fu">stack_metrics</span>(glm_1, glm_2, glm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  model                                        deviance   AIC   BIC
+  &lt;chr&gt;                                           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 glm(formula = vs ~ drat + hp, data = mtcars)     3.63  29.1  35.0
+2 glm(formula = vs ~ wt + qsec, data = mtcars)     2.04  10.8  16.6
+3 glm(formula = vs ~ ., data = mtcars)             1.58  18.6  36.2</code></pre>
+</div>
+</div>
+</section>
+<section id="modelfactorystack_coeff-lm-example" class="slide level2">
+<h2>modelfactory::stack_coeff() lm Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>modelfactory<span class="sc">::</span><span class="fu">stack_coeff</span>(lm_1, lm_2, lm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  coefficient model_name estimate std_error  p_value lower_ci upper_ci
+  &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept) mpg ~ cyl   37.9      2.07    8.37e-18  33.6     42.1   
+2 cyl         mpg ~ cyl   -2.88     0.322   6.11e-10  -3.53    -2.22  
+3 (Intercept) mpg ~ hp    30.1      1.63    6.64e-18  26.8     33.4   
+4 hp          mpg ~ hp    -0.0682   0.0101  1.79e- 7  -0.0889  -0.0476
+5 (Intercept) mpg ~ disp  29.6      1.23    3.58e-21  27.1     32.1   
+6 disp        mpg ~ disp  -0.0412   0.00471 9.38e-10  -0.0508  -0.0316</code></pre>
+</div>
 </div>
 </section>
 <section id="challenges" class="slide level2">
 <h2>Challenges</h2>
 <ul>
-<li>dependencies
+<li>Dependencies:
 <ul>
-<li>stats::confint() calls MASS::confint(), do I need to make both a dependancy??</li>
-<li>lme4 and Matrix installation issues!</li>
+<li>stats::confint() calls MASS::confint(), do I need to make both a dependency?</li>
+<li>lme4 and Matrix installation issues, but just used for examples in code</li>
 </ul></li>
 <li>I spent 90% of my time understanding how packages worked and 10% of time writing actual code</li>
-<li>completely different mindset compared to solving a problem once for homework</li>
+<li>Completely different mindset compared to solving a problem once for homework</li>
+<li>Writing tests is not something we do often.</li>
 </ul>
 </section>
-<section id="example" class="slide level2">
-<h2>Example</h2>
+<section id="challenges-cont." class="slide level2">
+<h2>Challenges (cont.)</h2>
 <ul>
 <li>deviance / AIC are attributes of glm, but not lmer models!</li>
 <li>Similar issue with <code>summary()</code> objects and many others.</li>
@@ -520,12 +562,23 @@
 [10] "deviance"          "aic"               "null.deviance"    
 [13] "iter"              "weights"           "prior.weights"    
 [16] "df.residual"       "df.null"           "y"                
-[19] "converged"         "boundary"          "model"            
-[22] "call"              "formula"           "terms"            
-[25] "data"              "offset"            "control"          
-[28] "method"            "contrasts"         "xlevels"          </code></pre>
+[19] "converged"         "boundary"         </code></pre>
 </div>
 </div>
+</section>
+<section id="cran-submission" class="slide level2">
+<h2>CRAN Submission</h2>
+<p>From R Packages (2e):</p>
+<ul>
+<li>usethis::use_news_md()</li>
+<li>usethis::use_cran_comments()</li>
+<li>Update (aspirational) install instructions in README</li>
+<li>Proofread Title: and Description:</li>
+<li>Check that all exported functions have <span class="citation" data-cites="returns">@returns</span> and <span class="citation" data-cites="examples">@examples</span></li>
+<li>Check that Authors@R: includes a copyright holder (role ‘cph’)</li>
+<li>Check licensing of included files</li>
+<li>Review https://github.com/DavisVaughan/extrachecks</li>
+</ul>
 <div class="footer footer-default">
 
 </div>
