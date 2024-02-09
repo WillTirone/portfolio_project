@@ -1,0 +1,13 @@
+---
+title: "Portfolio Project"
+author: "William Tirone"
+format: pdf
+editor: visual
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+library(modelfactory)
+```
+
+# Motivation
