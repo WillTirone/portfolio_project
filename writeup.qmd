@@ -1,6 +1,7 @@
 ---
 title: "Portfolio Project"
 author: "William Tirone"
+bibliography: references.bib
 format: pdf
 editor: visual
 ---
@@ -10,4 +11,45 @@ library(tidyverse)
 library(modelfactory)
 ```
 
-# Motivation
+## Motivation
+
+Throughout my degree, I have spent more time than necessary writing code to compare model metrics for several models in a dataframe. I have done this in Study Design, Hierarchical Models, Spatial and Time Series, Statistical Learning, and probably a few others. For example:
+
+```{r inspo}
+#| echo: true
+lm_1 = lm(mpg ~ cyl, data = mtcars)
+lm_2 = lm(mpg ~ hp, data = mtcars)
+
+bind_rows(data.frame(model = "lm_1", 
+                     MSE = mean(lm_1$residuals^2),
+                     RMSE = sqrt(mean(lm_1$residuals^2))),
+          data.frame(model = "lm_2", 
+                     MSE = mean(lm_2$residuals^2),
+                     RMSE = sqrt(mean(lm_2$residuals^2)))
+)
+```
+
+There are a few things that are inconvenient about this:
+
+1.  The model names have to be hardcoded as strings.
+
+2.  We have to calculate the MSE and RMSE by hand.
+
+3.  The code is very repetitive.
+
+I wanted to write an R package to learn about the process of creating a package, but I also wanted to do something useful. My goal was to wrap everything above in a function to make it usable repeatedly and cut down on unnecessary code.
+
+## Scope
+
+My first goal was to check what had been done before and already implemented in R. However, searching for code on CRAN is not trivially easy and requires a good amount of effort. There are 20,000+ packages, and it is not always easy to understand what a package does or whether or not a package does precisely what I want it to do. The closest I could find was this stackoverflow post (https://github.com/tidymodels/broom/issues/2) from the broom R package, though it looks like this feature was never implemented. Regardless, I think if it takes me at least an hour to try to find code that does something, I might as well write a package to do it. My primary resource, R Packages by Wickham and Bryan mentions the following: *"there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering"* [@WICKHAM_BRYAN_2023]. I think it is a worthy enough cause to make a package for the sake of learning how to do it, so I continued on with my idea.
+
+I frequently switch between different programming languages like R, Python, SQL, and MATLAB. While these have very similar syntaxes, that makes them all the more difficult to switch between. I confuse indexing dataframes and vectors in R and Python continually, and I can never remember what attributes an `lm()` model has. The only syntax I can remember without any references is something like the R package `cowplot`. You can use it like this to arrange several plots on a grid (similar to facet wrapping): `cowplot::plot_grid(plot1, plot2, plot3)`. I think this is beautifully simple, and I wanted something similar for model metrics and coefficients.
+
+## Implementation
+
+Part of the challenge of writing a function to compare different classes of models like `lm`, `glm`, or `lmer` is that they were developed by different people at different times in the development history of the language, and thus do not share the same attributes. For example, calling `names(glm)` on a `glm` model reveals that it has deviance and AIC as attributes of the model itself, but `lmer` models do not! There are similar challenges with different summary objects of the models as well. The point is, I perpetually cannot remember if the object I need is in a `summary()` object or the base model itself, and this changes across model types. To solve this, `modelfactory` detects which type of model is passed in using the base `class()` function, then pulls the appropriate metrics or values out. There are only two functions in `modelfactory`, and they do the following (these definitions are pulled from the roxygen text in the functions):
+
+1.  `modelfactory::stack_metrics` : calculates basic model metrics like MSE for the models passed in, then stacks them in a dataframe for comparison. This supports `lm`, `glm`, and `lmer` models, and different metrics are calculated for each. This does not perform model selection based on a given criteria, but it makes the tedious task of, say, comparing R-squared across several models very easy.
+2.  `modelfactory::stack_coefficients` : takes several `lm` or `glm` models, pulls out their coefficients, standard errors, and confidence intervals, and stacks everything into a tibble for easy comparison across models. Note that this doesn't support `lmer` models since those may have hundreds of point estimates for random effects, so it did not seem as useful while I was developing it. Maybe I will add some form of this in the future. 
+
+## References
