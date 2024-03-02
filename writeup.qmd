@@ -98,8 +98,19 @@ modelfactory::stack_coeff(lm_1, lm_2, lm_3)
 
 ## Challenges
 
-I spent 90% of my time understanding how to build the package, and 10% of my time actually writing the main functions. Dependencies were also a bit tricky to understand initially. It is obvious to include `dplyr` as a dependency since that is used directly in the package. There are also packages like `lmer` that are not used directly in the code, but used in the roxygen blocks. In general, I wanted to avoid pinning specific versions of packages to ensure there weren't any installation issues, but I had a repeat issue with the version of the `Matrix` package installed on my machine and in the GitHub check that runs automatically when I push new code. It turns out that `Matrix` version 
+I spent 90% of my time understanding how to build the package, and 10% of my time actually writing the main functions. Dependencies were also a bit tricky to understand initially. It is obvious to include `dplyr` as a dependency since that is used directly in the package. There are also packages like `lmer` that are not used directly in the code, but used in the roxygen blocks to demonstrate examples. In general, I wanted to avoid pinning specific versions of packages to ensure there weren't any installation issues. However, I had a repeat issue with the `Matrix` package. It turns out that the `Matrix` versions >= 1.6.5 and =< 1.6.5 are binary incompatible with the `lme4` package, so I had to require a specific version that was not obvious to manage from the start.
 
 ## CRAN Submission
+
+From R Packages (2e): 
+
+* usethis::use_news_md()
+* usethis::use_cran_comments()
+* Update (aspirational) install instructions in README
+* Proofread Title: and Description:
+* Check that all exported functions have @returns and @examples
+* Check that Authors@R: includes a copyright holder (role ‘cph’)
+* Check licensing of included files
+* Review https://github.com/DavisVaughan/extrachecks
 
 ## References

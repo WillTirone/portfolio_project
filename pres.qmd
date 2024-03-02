@@ -134,7 +134,7 @@ modelfactory::stack_coeff(lm_1, lm_2, lm_3)
 ## Challenges (cont.)
 
 * deviance / AIC are attributes of glm, but not lmer models! 
-* Similar issue with `summary()` objects and many others.
+* Similar issue with `summary()` objects and many others (add more here)
   
 ```{r}
 cat("lm summary \n")
