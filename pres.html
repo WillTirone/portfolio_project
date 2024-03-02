@@ -478,14 +478,15 @@
 <span id="cb5-4"><a href="#cb5-4"></a>lm_2 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars)</span>
 <span id="cb5-5"><a href="#cb5-5"></a>lm_3 <span class="ot">=</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> disp, <span class="at">data =</span> mtcars)</span>
 <span id="cb5-6"><a href="#cb5-6"></a></span>
-<span id="cb5-7"><a href="#cb5-7"></a>modelfactory<span class="sc">::</span><span class="fu">stack_metrics</span>(lm_1, lm_2, lm_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-7"><a href="#cb5-7"></a>modelfactory<span class="sc">::</span><span class="fu">stack_metrics</span>(lm_1, lm_2, lm_3) <span class="sc">|&gt;</span> </span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="fu">select</span>(<span class="sc">-</span>adj.r.squared)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 6
-  model                                r.squared adj.r.squared   MSE  RMSE   MAE
-  &lt;chr&gt;                                    &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 lm(formula = mpg ~ cyl, data = mtca…     0.726         0.717  9.64  3.10  2.40
-2 lm(formula = mpg ~ hp, data = mtcar…     0.602         0.589 14.0   3.74  2.91
-3 lm(formula = mpg ~ disp, data = mtc…     0.718         0.709  9.91  3.15  2.61</code></pre>
+<pre><code># A tibble: 3 × 5
+  model                                   r.squared   MSE  RMSE   MAE
+  &lt;chr&gt;                                       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 lm(formula = mpg ~ cyl, data = mtcars)      0.726  9.64  3.10  2.40
+2 lm(formula = mpg ~ hp, data = mtcars)       0.602 14.0   3.74  2.91
+3 lm(formula = mpg ~ disp, data = mtcars)     0.718  9.91  3.15  2.61</code></pre>
 </div>
 </div>
 </section>
@@ -541,7 +542,7 @@
 <h2>Challenges (cont.)</h2>
 <ul>
 <li>deviance / AIC are attributes of glm, but not lmer models!</li>
-<li>Similar issue with <code>summary()</code> objects and many others.</li>
+<li>Similar issue with <code>summary()</code> objects and many others (add more here)</li>
 </ul>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -566,18 +567,36 @@
 </div>
 </div>
 </section>
-<section id="cran-submission" class="slide level2">
-<h2>CRAN Submission</h2>
-<p>From R Packages (2e):</p>
+<section id="testing" class="slide level2">
+<h2>Testing</h2>
 <ul>
-<li>usethis::use_news_md()</li>
-<li>usethis::use_cran_comments()</li>
-<li>Update (aspirational) install instructions in README</li>
-<li>Proofread Title: and Description:</li>
-<li>Check that all exported functions have <span class="citation" data-cites="returns">@returns</span> and <span class="citation" data-cites="examples">@examples</span></li>
-<li>Check that Authors@R: includes a copyright holder (role ‘cph’)</li>
-<li>Check licensing of included files</li>
-<li>Review https://github.com/DavisVaughan/extrachecks</li>
+<li>Very different from our usual data science approach</li>
+<li>Particularly challenging because this is visual output, not a static value</li>
+<li>Runs every time we run <code>check()</code> and with GitHub actions</li>
+</ul>
+<p>Solution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">test_that</span>(<span class="st">"dimension of output tibble are correct"</span>, {</span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">expect_equal</span>(<span class="fu">dim</span>(lm_metrics), <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">6</span>))</span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">expect_equal</span>(<span class="fu">dim</span>(glm_metrics), <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>))</span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">expect_equal</span>(<span class="fu">dim</span>(lmer_metrics), <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb15-5"><a href="#cb15-5"></a>})</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="fu">test_that</span>(<span class="st">"data outputs are equal"</span>, {</span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="fu">expect_snapshot_value</span>(<span class="fu">stack_metrics</span>(lm_1, lm_2, lm_3), <span class="at">style =</span> <span class="st">'json2'</span>)</span>
+<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">expect_snapshot_value</span>(<span class="fu">stack_metrics</span>(glm_1, glm_2, glm_3), <span class="at">style =</span> <span class="st">'json2'</span>)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>  <span class="fu">expect_snapshot_value</span>(<span class="fu">stack_metrics</span>(lmer_1, lmer_2), <span class="at">style =</span> <span class="st">'json2'</span>)</span>
+<span id="cb15-11"><a href="#cb15-11"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="good-news" class="slide level2">
+<h2>Good news…</h2>
+<p>🎉🎉🎉🎉🎉🎉🎉🎉🎉 🎉 It’s on CRAN!🎉 🎉🎉🎉🎉🎉🎉🎉🎉🎉</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">install.packages</span>(<span class="st">"modelfactory"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Website very easy to make a nice website quickly with <code>pckgdown</code>: https://willtirone.github.io/modelfactory/</li>
 </ul>
 <div class="footer footer-default">
 
