@@ -48,30 +48,30 @@ I frequently switch between different programming languages like R, Python, SQL,
 Part of the challenge of writing a function to compare different classes of models like `lm`, `glm`, or `lmer` is that they were developed by different people at different times in the development history of the language, and thus do not share the same attributes. For example, calling `names(glm)` on a `glm` model reveals that it has deviance and AIC as attributes of the model itself, but `lmer` models do not! There are similar challenges with different summary objects of the models as well. The point is, I perpetually cannot remember if the object I need is in a `summary()` object or the base model itself, and this changes across model types. To solve this, `modelfactory` detects which type of model is passed in using the base `class()` function, then pulls the appropriate metrics or values out. There are only two functions in `modelfactory`, and they do the following (these definitions are pulled from the roxygen text in the functions):
 
 1.  `modelfactory::stack_metrics` : calculates basic model metrics like MSE for the models passed in, then stacks them in a dataframe for comparison. This supports `lm`, `glm`, and `lmer` models, and different metrics are calculated for each. This does not perform model selection based on a given criteria, but it makes the tedious task of, say, comparing R-squared across several models very easy.
-2.  `modelfactory::stack_coefficients` : takes several `lm` or `glm` models, pulls out their coefficients, standard errors, and confidence intervals, and stacks everything into a tibble for easy comparison across models. Note that this doesn't support `lmer` models since those may have hundreds of point estimates for random effects, so it did not seem as useful while I was developing it. Maybe I will add some form of this in the future. 
+2.  `modelfactory::stack_coefficients` : takes several `lm` or `glm` models, pulls out their coefficients, standard errors, and confidence intervals, and stacks everything into a tibble for easy comparison across models. Note that this doesn't support `lmer` models since those may have hundreds of point estimates for random effects, so it did not seem as useful while I was developing it. Maybe I will add some form of this in the future.
 
-I have developed a Python package, but not R. I turned to R Packages (2e), which lays out very clear steps to start building a package from scratch. Much of the structure of the package is not made by hand, but with various `devtools` and `usethis` functions. For example, `devtools::create_package()` builds a skeleton of a package that includes things like the DESCRIPTION file, R/ folder, and a handful of other files necessary for a user to install the package on their own machine.
+I have developed a Python package in the past, but not R. I turned to R Packages (2e), which lays out very clear steps to start building a package from scratch. Much of the structure of the package is not made by hand, but with various `devtools` and `usethis` functions. For example, `devtools::create_package()` builds a skeleton of a package that includes things like the DESCRIPTION file, R/ folder, and a handful of other files necessary for a user to install the package on their own machine.
 
-### Workflow 
+### Workflow
 
 Here is my typical workflow:
 
-1. Edit some code in R/
-2. `devtools::load_all()` and try out the code interactively 
-3. Update documentation with `document()`
-4. Update or add a new test, and run `test_active_file()`
-5. `devtools::check()` to see if everything runs and installs smoothly
-6. Commit and push changes to my GitHub repo
+1.  Edit some code in R/
+2.  `devtools::load_all()` and try out the code interactively
+3.  Update documentation with `document()`
+4.  Update or add a new test, and run `test_active_file()`
+5.  `devtools::check()` to see if everything runs and installs smoothly
+6.  Commit and push changes to my GitHub repo
 
-Sometimes in a different order, but always run `check()` at many different stages to avoid bigger problems later. 
+Sometimes in a different order, but always run `check()` at many different stages to avoid bigger problems later.
 
 ### Testing
 
 One of the most significant differences between package writing and a standard data science workflow is the existence of testing. That is, a particular file or group of files that perform some kind of tests to ensure either 1) that a bug has been successfully fixed and won't sneak back in or 2) ensure a critical part of a package works after some related or unrelated code is added. Since my primary output is a `tibble`, this is a bit challenging to write tests for. Do we want to make sure that certain functions give us the numbers we expect? Or should we check the number of rows and columns? Or do we simply want to match some pre-determined "correct" `tibble` output? I chose a combination of these.
 
-### Examples 
+### Examples
 
-To share examples of the package's functions with others, the `pkgdown` library makes a very nice website in just a few commands. You can view that here: https://willtirone.github.io/modelfactory/. The "Reference" tab of this website just renders the roxygen block above each function, which shows the possible arguments, a description, and code examples with output. 
+To share examples of the package's functions with others, the `pkgdown` library makes a very nice website in just a few commands. You can view that here: https://willtirone.github.io/modelfactory/. The "Reference" tab of this website just renders the roxygen block above each function, which shows the possible arguments, a description, and code examples with output.
 
 Here's an example of `modelfactory::stack_metrics()` to compare several `glm` models to see which models might be the best fit based on several metrics. We see that `glm_2` achieves the lowest AIC and BIC, but `glm_3` achieves the lowest deviance. This provides no statistical guarantees that `glm_2` is better than `glm_3` but it provides a starting point to examine the models more in depth.
 
@@ -84,7 +84,7 @@ glm_3 = glm(vs ~ ., data = mtcars)
 modelfactory::stack_metrics(glm_1, glm_2, glm_3)
 ```
 
-Here's an example using `modelfactory::stack_coeff()` to compare point estimates, confidence intervals, and standard errors for several different `lm` models. With one line of code, we can quickly look at the different 95% C.I.'s, and see how the different covariates affect each of these. 
+Here's an example using `modelfactory::stack_coeff()` to compare point estimates, confidence intervals, and standard errors for several different `lm` models. With one line of code, we can quickly look at the different 95% C.I.'s, and see how the different covariates affect each of these.
 
 ```{r}
 #| echo: true
@@ -98,19 +98,21 @@ modelfactory::stack_coeff(lm_1, lm_2, lm_3)
 
 ## Challenges
 
-I spent 90% of my time understanding how to build the package, and 10% of my time actually writing the main functions. Dependencies were also a bit tricky to understand initially. It is obvious to include `dplyr` as a dependency since that is used directly in the package. There are also packages like `lmer` that are not used directly in the code, but used in the roxygen blocks to demonstrate examples. In general, I wanted to avoid pinning specific versions of packages to ensure there weren't any installation issues. However, I had a repeat issue with the `Matrix` package. It turns out that the `Matrix` versions >= 1.6.5 and =< 1.6.5 are binary incompatible with the `lme4` package, so I had to require a specific version that was not obvious to manage from the start.
+I spent 90% of my time understanding how to build the package, and 10% of my time actually writing the main functions. Dependencies were also a bit tricky to understand initially. It is obvious to include `dplyr` as a dependency since that is used directly in the package. There are also packages like `lmer` that are not used directly in the code, but used in the roxygen blocks to demonstrate examples. In general, I wanted to avoid pinning specific versions of packages to ensure there weren't any installation issues. However, I had a repeat issue with the `Matrix` package. It turns out that the `Matrix` versions \>= 1.6.5 and =\< 1.6.5 are binary incompatible with the `lme4` package, so I had to require a specific version that was not obvious from the start.
 
 ## CRAN Submission
 
-From R Packages (2e): 
+From R Packages (2e):
 
-* usethis::use_news_md()
-* usethis::use_cran_comments()
-* Update (aspirational) install instructions in README
-* Proofread Title: and Description:
-* Check that all exported functions have @returns and @examples
-* Check that Authors@R: includes a copyright holder (role ‘cph’)
-* Check licensing of included files
-* Review https://github.com/DavisVaughan/extrachecks
+-   usethis::use_news_md()
+-   usethis::use_cran_comments()
+-   Update (aspirational) install instructions in README
+-   Proofread Title: and Description:
+-   Check that all exported functions have @returns and @examples
+-   Check that Authors\@R: includes a copyright holder (role 'cph')
+-   Check licensing of included files
+-   Review https://github.com/DavisVaughan/extrachecks
+
+None of these points are too complicated, but it requires a lot of attention to detail and going over the package with a fine tooth comb. I submitted my project and about a week later, got a response to change some of the text in the DESCRIPTION file. After making minor changes and resubmitting, it was accepted to CRAN! You can install and use the package today with `install.packages("modelfactory")`.
 
 ## References

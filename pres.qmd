@@ -185,3 +185,10 @@ install.packages("modelfactory")
 * Website very easy to make a nice website quickly with `pckgdown`: https://willtirone.github.io/modelfactory/ 
 
 * CRAN: https://cran.r-project.org/web/packages/modelfactory/index.html 
+
+## Thank you to: 
+
+* Dr. Colin Rundel 
+* Dr. Yue Jiang 
+* R Packages (2e) by Wickham and Bryan
+* My friends in the MSS Program 
