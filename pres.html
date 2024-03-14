@@ -596,9 +596,35 @@
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">install.packages</span>(<span class="st">"modelfactory"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li><p>Website very easy to make a nice website quickly with <code>pckgdown</code>: https://willtirone.github.io/modelfactory/</p></li>
+<li><p>Website: very easy to make a nice website quickly with <code>pckgdown</code>: https://willtirone.github.io/modelfactory/</p></li>
 <li><p>CRAN: https://cran.r-project.org/web/packages/modelfactory/index.html</p></li>
 </ul>
+</section>
+<section id="cran-submission-process" class="slide level2">
+<h2>CRAN Submission Process</h2>
+<ol type="1">
+<li>Determine the release type, which dictates the version number.</li>
+<li>If the package is already on CRAN: Do due diligence on existing CRAN results. If this is a first release: confirm you are in compliance with CRAN policies.</li>
+<li>Freshen up documentation files, such as README.md and NEWS.md.</li>
+<li>Double check() that your package is passing cleanly on multiple operating systems and on the released and development version of R.</li>
+<li>Perform reverse dependency checks, if other packages depend on yours.</li>
+<li>Submit the package to CRAN and wait for acceptance.</li>
+<li>Create a GitHub release and prepare for the next version by incrementing the version number.</li>
+<li>Publicize the new version.</li>
+</ol>
+</section>
+<section id="first-time-cran-submission" class="slide level2">
+<h2>First Time CRAN Submission</h2>
+<ol start="9" type="1">
+<li>usethis::use_news_md()</li>
+<li>usethis::use_cran_comments()</li>
+<li>Update (aspirational) install instructions in README</li>
+<li><strong>Proofread Title: and Description:</strong> (had to adjust based on feedback)</li>
+<li>Check that all exported functions have <span class="citation" data-cites="returns">@returns</span> and <span class="citation" data-cites="examples">@examples</span></li>
+<li>Check that Authors@R: includes a copyright holder (role ‘cph’)</li>
+<li>Check licensing of included files</li>
+<li>Review https://github.com/DavisVaughan/extrachecks</li>
+</ol>
 </section>
 <section id="thank-you-to" class="slide level2">
 <h2>Thank you to:</h2>
