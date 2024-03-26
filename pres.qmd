@@ -169,23 +169,6 @@ test_that("data outputs are equal", {
 })
 ```
 
-
-## Good news... 
-
-🎉🎉🎉🎉🎉🎉🎉🎉🎉
-🎉 It's on CRAN!🎉
-🎉🎉🎉🎉🎉🎉🎉🎉🎉
-
-```{r}
-#| echo: true 
-#| eval: false 
-install.packages("modelfactory")
-```
-
-* Website: very easy to make a nice website quickly with `pckgdown`: https://willtirone.github.io/modelfactory/ 
-
-* CRAN: https://cran.r-project.org/web/packages/modelfactory/index.html 
-
 ## CRAN Submission Process
 
 1. Determine the release type, which dictates the version number.
@@ -207,6 +190,20 @@ install.packages("modelfactory")
 14. Check that Authors@R: includes a copyright holder (role ‘cph’)
 15. Check licensing of included files
 16. Review https://github.com/DavisVaughan/extrachecks
+
+## Good news... 
+
+🎉🎉🎉🎉🎉🎉🎉🎉🎉  It's on CRAN! 🎉🎉🎉🎉🎉🎉🎉🎉🎉
+
+```{r}
+#| echo: true 
+#| eval: false 
+install.packages("modelfactory")
+```
+
+* Website: very easy to make a nice website quickly with `pckgdown`: https://willtirone.github.io/modelfactory/ 
+
+* CRAN: https://cran.r-project.org/web/packages/modelfactory/index.html 
 
 ## Thank you to: 
 
