@@ -174,7 +174,7 @@ test_that("data outputs are equal", {
 1. Determine the release type, which dictates the version number.
 2. If the package is already on CRAN: Do due diligence on existing CRAN results. If this is a first release: confirm you are in compliance with CRAN policies.
 3. Freshen up documentation files, such as README.md and NEWS.md.
-4. Double check() that your package is passing cleanly on multiple operating systems and on the     released and development version of R.
+4. Double `check()` that your package is passing cleanly on multiple operating systems and on the released and development version of R.
 5. Perform reverse dependency checks, if other packages depend on yours.
 6. Submit the package to CRAN and wait for acceptance.
 7. Create a GitHub release and prepare for the next version by incrementing the version number.
@@ -182,14 +182,20 @@ test_that("data outputs are equal", {
 
 ## First Time CRAN Submission
 
-9. usethis::use_news_md()
-10. usethis::use_cran_comments()
+9. `usethis::use_news_md()`
+10. `usethis::use_cran_comments()`
 11. Update (aspirational) install instructions in README
 12. **Proofread Title: and Description:** (had to adjust based on feedback)
 13. Check that all exported functions have @returns and @examples
 14. Check that Authors@R: includes a copyright holder (role ‘cph’)
 15. Check licensing of included files
 16. Review https://github.com/DavisVaughan/extrachecks
+
+## My Submission 
+
+1. `devtools::submit_cran()` and wait... 
+
+![](images\feedback.png){fig-align="center"}
 
 ## Good news... 
 
@@ -201,7 +207,7 @@ test_that("data outputs are equal", {
 install.packages("modelfactory")
 ```
 
-* Website: very easy to make a nice website quickly with `pckgdown`: https://willtirone.github.io/modelfactory/ 
+* Website: very easy to make a nice website quickly with `pkgdown`: https://willtirone.github.io/modelfactory/ 
 
 * CRAN: https://cran.r-project.org/web/packages/modelfactory/index.html 
 

@@ -595,7 +595,7 @@
 <li>Determine the release type, which dictates the version number.</li>
 <li>If the package is already on CRAN: Do due diligence on existing CRAN results. If this is a first release: confirm you are in compliance with CRAN policies.</li>
 <li>Freshen up documentation files, such as README.md and NEWS.md.</li>
-<li>Double check() that your package is passing cleanly on multiple operating systems and on the released and development version of R.</li>
+<li>Double <code>check()</code> that your package is passing cleanly on multiple operating systems and on the released and development version of R.</li>
 <li>Perform reverse dependency checks, if other packages depend on yours.</li>
 <li>Submit the package to CRAN and wait for acceptance.</li>
 <li>Create a GitHub release and prepare for the next version by incrementing the version number.</li>
@@ -605,8 +605,8 @@
 <section id="first-time-cran-submission" class="slide level2">
 <h2>First Time CRAN Submission</h2>
 <ol start="9" type="1">
-<li>usethis::use_news_md()</li>
-<li>usethis::use_cran_comments()</li>
+<li><code>usethis::use_news_md()</code></li>
+<li><code>usethis::use_cran_comments()</code></li>
 <li>Update (aspirational) install instructions in README</li>
 <li><strong>Proofread Title: and Description:</strong> (had to adjust based on feedback)</li>
 <li>Check that all exported functions have <span class="citation" data-cites="returns">@returns</span> and <span class="citation" data-cites="examples">@examples</span></li>
@@ -615,6 +615,13 @@
 <li>Review https://github.com/DavisVaughan/extrachecks</li>
 </ol>
 </section>
+<section id="my-submission" class="slide level2">
+<h2>My Submission</h2>
+<ol type="1">
+<li><code>devtools::submit_cran()</code> and wait…</li>
+</ol>
+
+<img data-src="images\feedback.png" class="r-stretch quarto-figure-center"></section>
 <section id="good-news" class="slide level2">
 <h2>Good news…</h2>
 <p>🎉🎉🎉🎉🎉🎉🎉🎉🎉 It’s on CRAN! 🎉🎉🎉🎉🎉🎉🎉🎉🎉</p>
