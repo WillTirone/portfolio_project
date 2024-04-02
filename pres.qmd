@@ -1,5 +1,5 @@
 ---
-format: 
+format:  
   revealjs: 
     theme: slides.scss
     transition: fade
@@ -40,7 +40,9 @@ bind_rows(data.frame(model = "lm_1",
 * Maybe? https://github.com/tidymodels/broom/issues/2
 * *"But there are plenty of good reasons to make your own package, even if there is relevant prior work. The way experts got that way is by actually building things, often very basic things, and you deserve the same chance to learn by tinkering."* - R Packages 2e
 * This is the actual R website in 2024
+
 ![](images\cran.PNG){fig-align="center"}
+
 
 ## Goal 
 

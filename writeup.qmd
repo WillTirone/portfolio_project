@@ -67,7 +67,7 @@ Sometimes in a different order, but always run `check()` at many different stage
 
 ### Testing
 
-One of the most significant differences between package writing and a standard data science workflow is the existence of testing. That is, a particular file or group of files that perform some kind of tests to ensure either 1) that a bug has been successfully fixed and won't sneak back in or 2) ensure a critical part of a package works after some related or unrelated code is added. Since my primary output is a `tibble`, this is a bit challenging to write tests for. Do we want to make sure that certain functions give us the numbers we expect? Or should we check the number of rows and columns? Or do we simply want to match some pre-determined "correct" `tibble` output? I chose a combination of these.
+One of the most significant differences between package writing and a standard data science workflow is testing. That is, a particular file or group of files that perform some kind of tests to ensure either 1) that a bug has been successfully fixed and won't sneak back in or 2) ensure a critical part of a package works after some related or unrelated code is added. Since my primary output is a `tibble`, this is a bit challenging to write tests for. Do we want to make sure that certain functions give us the numbers we expect? Or should we check the number of rows and columns? Or do we simply want to match some pre-determined "correct" `tibble` output? I chose a combination of these.
 
 ### Examples
 
